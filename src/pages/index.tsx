@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 import { api } from "../utils/api";
 
@@ -31,23 +32,38 @@ const AuthShowcase: React.FC = () => {
     { enabled: sessionData?.user !== undefined }
   );
 
+  const router = useRouter();
+  const navigate = (path: string) => {
+    if (router.pathname !== path) {
+      router.push(path);
+    }
+  };
+
   // {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-5xl">Speech Simulator</h1>
+      <h1 className="p-16 text-5xl font-extrabold">Speech Simulator</h1>
       <div className="flex justify-around text-3xl">
-        <button className="mx-2 w-80 rounded-xl bg-accent p-2 text-white">
+        <button
+          className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
+          onClick={() => navigate("/presentations/create")}
+        >
           Create Presentation
         </button>
-        <button className="mx-2 w-80 rounded-xl bg-accent p-2 text-white">
+        <button
+          className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
+          onClick={() => navigate("/presentations/previous")}
+        >
           Previous Presentations
         </button>
         <button className="mx-2 w-80 rounded-xl bg-accent p-2 text-white">
           Logout
         </button>
       </div>
-      <i>{sessionData && <span>Logged in as {sessionData.user?.name}</span>}</i>
+      <i className="p-4">
+        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+      </i>
     </div>
   );
 };
