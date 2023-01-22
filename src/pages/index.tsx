@@ -90,9 +90,17 @@ const AuthShowcase: React.FC = () => {
           Previous Presentations
         </button>
       </div>
-      <i className="p-4">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-      </i>
+      <div className="flex items-center p-4">
+        <i>
+          {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        </i>
+        <button
+          className="mx-2 rounded-xl border-2 px-2"
+          onClick={() => signOut()}
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
