@@ -5,6 +5,7 @@ import { type Attempt } from "@prisma/client";
 
 export default function Attempt() {
   const [width, setWidth] = useState<number>(window.innerWidth);
+  const mutation = api.presentation.queueExistingPresentation.useMutation();
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
@@ -73,7 +74,10 @@ export default function Attempt() {
       </div>
       <button
         className="mx-2 rounded-xl bg-accent p-4 text-white"
-        // onClick={() => ()}
+        onClick={() => {
+          console.log(presentationId);
+          mutation.mutate({ id: presentationId as string });
+        }}
       >
         Start New Attempt
       </button>

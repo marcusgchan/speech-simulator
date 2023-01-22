@@ -10,18 +10,6 @@ export const attemptRouter = createTRPCRouter({
     const first = await ctx.prisma.presentation.findFirst({
       where: { AND: [{ id: input }, { userId: ctx.session.user.id }] },
     });
-    console.log(
-      await ctx.prisma.attempt.findMany({
-        where: {
-          presentationId: first?.id,
-        },
-        orderBy: [
-          {
-            createdAt: "desc",
-          },
-        ],
-      })
-    );
     return await ctx.prisma.attempt.findMany({
       where: {
         presentationId: first?.id,
