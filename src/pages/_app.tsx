@@ -44,9 +44,16 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
     );
   } else if (status === "unauthenticated") {
     return (
-      <div>
-        <h1>You are not logged in</h1>
-        <button onClick={() => signIn()}>Login</button>
+      <div className="flex h-screen flex-col items-center justify-center">
+        <h1 className="pt-8 text-center text-2xl font-bold">
+          You are not logged in
+        </h1>
+        <button
+          className="m-2 w-80 rounded-xl bg-accent p-2 text-white hover:bg-emerald-700"
+          onClick={() => signIn()}
+        >
+          Login
+        </button>
       </div>
     );
   }
