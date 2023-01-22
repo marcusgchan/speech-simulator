@@ -5,8 +5,9 @@ const DynamicClient = dynamic(() => import("../components/VRClient"), {
 });
 
 export default function Vr() {
-  return <>
-    <DynamicClient />
-  </>;
+  return (
+    <>
+      <DynamicClient />
+    </>
+  );
 }
-

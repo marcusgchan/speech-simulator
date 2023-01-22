@@ -21,7 +21,7 @@ export const attemptRouter = createTRPCRouter({
         },
       ],
     });
-    return { attemptsList: allAttempts, idealTime: presentationIdealTime }
+    return { attemptsList: allAttempts, idealTime: presentationIdealTime };
   }),
   addPresentationToPush: protectedProcedure
     .input(addPresentationToPush)
