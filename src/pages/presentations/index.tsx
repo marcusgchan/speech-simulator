@@ -84,7 +84,7 @@ export default function Index() {
     return (
       <button
         className="m-4 flex flex-col rounded-xl border-2 p-4 text-left"
-        onClick={() => navigate(`/presentations/${presentation.id}`)}
+        onClick={() => navigate(`/presentations/${presentation.id}/edit`)}
       >
         <div className="h-4 w-full"></div>
         <i>{presentation.createdAt.toDateString()}</i>
