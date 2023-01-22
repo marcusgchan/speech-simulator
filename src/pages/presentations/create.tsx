@@ -48,7 +48,7 @@ export default function Create() {
         text-gray-700
         transition
         ease-in-out
-        focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+        focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
       "
             value={formData.title}
             onChange={(e) =>
@@ -98,7 +98,7 @@ export default function Create() {
         text-gray-700
         transition
         ease-in-out
-        focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+        focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
       "
             placeholder="Your speech"
             rows={5}
@@ -111,7 +111,7 @@ export default function Create() {
       </p>
       <button
         type="button"
-        className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
         onClick={() => {
           const card = speech.split("|");
           for (let i = 0; i < card.length; i++) {

@@ -29,6 +29,7 @@ export default function Attempt() {
       router.push(path);
     }
   };
+
   const [selectAttemptId, setSelectAttemptId] = useState<string>();
 
   if (isLoading || !attemptsList) {
@@ -61,7 +62,7 @@ export default function Attempt() {
       <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
       <div
         className={`outer-container flex gap-8 ${
-          isMobile ? "flex-col" : "flex-row"
+          isMobile ? "flex-col items-center" : "flex-row"
         }`}
       >
         <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4 ">
@@ -72,20 +73,39 @@ export default function Attempt() {
           selectedAttempt={selectedAttempt}
         />
       </div>
-      <button
-        className="mx-2 rounded-xl bg-accent p-4 text-white"
-        onClick={() => {
-          console.log(presentationId);
-          mutation.mutate({ id: presentationId as string });
-        }}
+      <div
+        className={`flex ${isMobile ? "flex-col items-center" : "flex-row"}`}
       >
-        Start New Attempt
-      </button>
+        <button
+          className="m-2 w-48 rounded-xl bg-accent py-3 text-white hover:bg-emerald-700"
+          onClick={() => {
+            console.log(presentationId);
+            mutation.mutate({ id: presentationId as string });
+          }}
+        >
+          Start New Attempt
+        </button>
+        <button
+          className="m-2 w-48 rounded-xl bg-accent py-3 text-white hover:bg-emerald-700"
+          onClick={() => navigate(`../presentations/${presentationId}/edit`)}
+        >
+          Edit presentation
+        </button>
+        <button
+          className="m-2 w-48 rounded-xl bg-accent py-3 text-white hover:bg-emerald-700"
+          onClick={() => navigate("../presentations")}
+        >
+          Previous presentations
+        </button>
+      </div>
+
       <button
-        className="mx-2 rounded-xl bg-accent p-4 text-white"
-        onClick={() => navigate("../")}
+        className={`${
+          isMobile ? "" : "absolute bottom-0 right-0"
+        }  m-4 rounded-xl border-2 py-2 px-4`}
+        onClick={() => navigate("../vr")}
       >
-        Previous presentations
+        Go to VR
       </button>
     </div>
   );

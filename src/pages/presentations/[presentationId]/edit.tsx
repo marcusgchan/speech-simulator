@@ -72,7 +72,7 @@ function Inner({
       text-gray-700
       transition
       ease-in-out
-      focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+      focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
     "
             value={presentation.title}
             onChange={(e) =>
@@ -120,7 +120,7 @@ function Inner({
       text-gray-700
       transition
       ease-in-out
-      focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+      focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
     "
             value={speech}
             rows={5}
@@ -133,7 +133,7 @@ function Inner({
       </p>
       <button
         type="button"
-        className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
         onClick={async () => {
           const card = speech.split("|");
           for (let i = 0; i < card.length; i++) {
