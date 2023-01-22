@@ -66,7 +66,7 @@ export default function Create() {
             type="number"
             name="time"
             min={1}
-            className="border"
+            className="border-rounded border px-3 py-1.5 text-base focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none"
             value={formData.idealTime}
             onChange={(e) => {
               if (isNaN(e.target.valueAsNumber)) {
