@@ -38,7 +38,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
   const { status } = useSession();
   if (status === "loading") {
     return (
-      <div className="flex h-full w-full items-center justify-center">
+      <div className="flex h-screen w-full items-center justify-center">
         <div>Loading...</div>
       </div>
     );
