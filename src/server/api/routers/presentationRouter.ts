@@ -1,6 +1,5 @@
-import { z } from "zod";
-import { getPresentationSchema } from "../../../schemas/presentation";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createPresentationSchema } from "../../../schemas/presentation";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const presentationRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx, input }) => {
@@ -16,6 +15,41 @@ export const presentationRouter = createTRPCRouter({
       return;
     }
   }),
+  create: protectedProcedure
+    .input(createPresentationSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Check if queue is empty
+      const queue = await ctx.prisma.queue.count({
+        where: {
+          presentation: {
+            user: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+      if (!queue) {
+        await ctx.prisma.$transaction(async () => {
+          const presentation = await ctx.prisma.presentation.create({
+            data: {
+              title: input.title,
+              userId: ctx.session.user.id,
+              idealTime: input.idealTime * 60, // Store as seconds
+              flashcards: { createMany: { data: input.flashcards } },
+            },
+          });
+          const createdQueue = await ctx.prisma.queue.create({
+            data: {
+              presentationId: presentation.id,
+            },
+          });
+        });
+      }
+      // Queue should only have length of 1
+      else {
+      }
+      return;
+    }),
 });
 
 // export const attemptRouter = createTRPCRouter({

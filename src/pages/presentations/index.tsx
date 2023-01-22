@@ -1,6 +1,6 @@
 import test from "node:test";
 import { useState, useEffect } from "react";
-import { getPresentationSchema } from "../../schemas/presentation";
+import { createPresentationSchema } from "../../schemas/presentation";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
 

@@ -67,22 +67,28 @@ const VRClient = () => {
           <Hands />
           <Model />
           <Interactive>
-            <mesh position={[0, 1, 1]} scale={[0.5, 0.5, 0.01]}>
-              <mesh position={[0, 0.4, 0.6]}>
+            <mesh position={[-0.05, 1.1, 0.8]} scale={[1.7, 0.7, 0.01]} rotation={[0, 9.5, 0]}>
+              <mesh position={[-0.49, 0.45, 0.6]}>
                 <Text
-                  scale={[0.5, 0.5, 0.5]}
-                  fontSize={0.1}
-                  color={"red"}
-                  anchorX="center"
-                  anchorY="middle"
+                  scale={[0.1, 0.2, 0.1]}
+                  fontSize={0.3}
+                  color={"black"}
+                  anchorX="left"
+                  anchorY="top"
+                  maxWidth={10}
+                  whiteSpace="normal"
                 >
-                  test tesxsf sa f ifj saf
+                  hello blah blah nlaj nalnln nlbalh nalnln nlbalh hello blah blah nlaj nalnln nlbalh nalnln nlbalh
                 </Text>
               </mesh>
               <boxGeometry />
               <meshBasicMaterial color="blue" />
             </mesh>
           </Interactive>
+          <mesh position={[0, 1.1, -1]} scale={[0.6, 0.4, 0.2]}>
+            <boxGeometry />
+            <meshBasicMaterial color="blue" />
+          </mesh>
           <LightBulb />
         </XR>
       </Canvas>
@@ -190,7 +196,13 @@ function LightBulb(props: MeshProps) {
 
 function Model() {
   const model = useGLTF("http://localhost:3000/classroom.glb");
-  return <primitive object={model.scene} />;
+  return (
+    <primitive
+      object={model.scene}
+      position={[0.6, -0.3, -2.5]}
+      rotation={[0, 9.5, 0]}
+    />
+  );
 }
 
 export default VRClient;
