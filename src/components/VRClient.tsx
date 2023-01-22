@@ -17,6 +17,7 @@ import { Text, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clientEnv } from "../env/schema.mjs";
 import { api } from "../utils/api";
+import { Loader } from "./Loader.jsx";
 const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(
   clientEnv.NEXT_PUBLIC_SPEECHLY_CLIENT_ID as string
 );
@@ -66,7 +67,11 @@ const VRClient = () => {
   });
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <div>
+        <Loader></Loader>
+      </div>
+    );
   }
 
   if (!data)

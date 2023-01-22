@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { type RouterOutputs, api } from "../../utils/api";
 import { useRouter } from "next/router";
+import { Loader } from "../../components/Loader";
 
 export default function Index() {
   const [width, setWidth] = useState<number>(window.innerWidth);
@@ -20,7 +21,12 @@ export default function Index() {
 
   const { data, isLoading, isError } = api.presentation.getAll.useQuery();
 
-  if (!data || isLoading) return <div>loading</div>;
+  if (!data || isLoading)
+    return (
+      <div>
+        <Loader></Loader>
+      </div>
+    );
   if (isError) return <div>something died¡</div>;
 
   return (

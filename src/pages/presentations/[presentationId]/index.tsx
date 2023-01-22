@@ -4,6 +4,7 @@ import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
 import { fillerWordCount } from "../../../fillerWords";
 import { useSnackbarDispatch } from "../../../components/Snackbar";
+import { Loader } from "../../../components/Loader";
 
 export default function Attempt() {
   const [width, setWidth] = useState<number>(window.innerWidth);
@@ -48,7 +49,11 @@ export default function Attempt() {
   const [selectAttemptId, setSelectAttemptId] = useState<string>();
 
   if (isLoading || !data?.attemptsList || !data?.idealTime) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loader></Loader>
+      </div>
+    );
   }
   const attemptsList = data.attemptsList;
   const idealTime = data.idealTime;

@@ -6,6 +6,7 @@ import { api } from "../utils/api";
 import "../styles/globals.css";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "../components/Snackbar";
+import { Loader } from "../components/Loader";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -39,7 +40,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
   if (status === "loading") {
     return (
       <div className="flex h-full w-full items-center justify-center">
-        <div>Loading...</div>
+        <Loader></Loader>
       </div>
     );
   } else if (status === "unauthenticated") {
