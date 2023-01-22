@@ -26,7 +26,7 @@ export default function Attempt() {
   const attemptsDivs = attemptsList.map((attempt) => {
     return (
       <div
-        className="h-20 w-96 border-b-8 border-solid p-4"
+        className="h-20 w-96 rounded-xl border-2 p-4 font-bold"
         onClick={() => {
           setSelectAttempt(attempt);
         }}
@@ -38,17 +38,23 @@ export default function Attempt() {
 
   return (
     <>
-      <h1 className="border-b-8 border-solid text-lg">Attempts</h1>
+      <button
+        className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
+        // onClick={() => ()}
+      >
+        Go back to previous attempts
+      </button>
+      <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
       <div className="outer-container flex flex-row">
-        <div className="attempts-list flex w-96 flex-col border-b-8 border-solid p-4">
+        <div className="attempts-list flex w-96 flex-col p-4">
           {attemptsDivs}
         </div>
         {attemptsList.some((attempt) => selectAttempt.id === attempt.id) ? (
-          <div className="h-96 w-96 border-b-8 border-solid bg-accent p-4">
+          <div className="h-96 w-96 rounded-xl border-2 p-4 text-left">
             Time Taken: {selectAttempt.timeTaken}
           </div>
         ) : (
-          <div className="h-96 w-96 border-b-8 border-solid bg-accent p-4">
+          <div className="h-96 w-96 rounded-xl border-2 p-4 text-left font-bold">
             Select an Attempt
           </div>
         )}
