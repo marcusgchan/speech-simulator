@@ -15,6 +15,10 @@ export default function Create() {
       });
     },
     onSuccess() {
+      snackDispatch({
+        type: "SUCCESS",
+        message: "Sucessfully added and queued presentation",
+      });
       router.push("/");
     },
   });
