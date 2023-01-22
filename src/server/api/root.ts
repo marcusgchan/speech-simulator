@@ -1,7 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { presentationRouter } from "./routers/presentationRouter";
-import { attemptRouter } from "./routers/attemptRouter";
+import { attemptRouter } from "./routers/attemptsRouter";
 
 /**
  * This is the primary router for your server.

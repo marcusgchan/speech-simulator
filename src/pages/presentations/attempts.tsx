@@ -26,6 +26,7 @@ export default function Attempt() {
   const attemptsDivs = attemptsList.map((attempt) => {
     return (
       <div
+        key={attempt.id}
         className="h-20 w-96 rounded-xl border-2 p-4 font-bold"
         onClick={() => {
           setSelectAttempt(attempt);
@@ -42,7 +43,7 @@ export default function Attempt() {
         className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
         // onClick={() => ()}
       >
-        Go back to previous attempts
+        Start New Attempt
       </button>
       <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
       <div className="outer-container flex flex-row">
