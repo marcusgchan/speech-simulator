@@ -220,8 +220,8 @@ function DisplayAttempt({
       <span>
         {" "}
         Finally, your presentation would level up if you avoided{" "}
-        {<span className="text-accent">filler words</span>} such as "like",
-        "um", etc.
+        {<span className="text-accent">filler words</span>} such as
+        &quot;like&quot;, &quot;um&quot;, etc.
       </span>
     ) : (
       ""
@@ -257,7 +257,7 @@ function DisplayAttempt({
       </div>
       <p>
         Great work on {<span className="text-accent">completing</span>} your
-        presentation! {diffString} Now let's talk about pace. {wpmString}
+        presentation! {diffString} Now let&apos;s talk about pace. {wpmString}
         {fillterString} Good luck on your presentation!
       </p>
     </div>
