@@ -5,7 +5,6 @@ import SpeechRecognition, {
 import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import {
   VRButton,
-  ARButton,
   XR,
   Controllers,
   Hands,
@@ -52,6 +51,7 @@ const VRClient = () => {
   const mutation = api.queue.deleteQueue.useMutation();
   const presentationToPushMutation =
     api.attempt.addPresentationToPush.useMutation();
+  const dateCreatedRef = useRef<Date>(new Date());
 
   if (!browserSupportsSpeechRecognition) {
     return <span> Browser does not support speech to text.</span>;
@@ -61,13 +61,20 @@ const VRClient = () => {
     return <span> Please allow access to microphone.</span>;
   }
 
-  const test = api.queue.getQueueAndPresentation.useQuery("", {
+  const { data, isLoading } = api.queue.getQueueAndPresentation.useQuery("", {
     refetchInterval: 5 * 1000,
-  }).data;
+  });
 
-  const data = test;
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
 
-  if (!data) return <span>Loading</span>;
+  if (!data)
+    return (
+      <div className="mt-16 text-center text-lg">
+        There are no presentations that are queued.
+      </div>
+    );
 
   const cards = data.presentation.flashcards;
 
@@ -82,19 +89,22 @@ const VRClient = () => {
         </button>
         <button onClick={SpeechRecognition.stopListening}>Stop</button>
         <button onClick={resetTranscript}>Reset</button>
-        <p>{transcript}</p>
       </div>
       <VRButton />
       <Canvas>
         <XR
           onSessionStart={() => {
             SpeechRecognition.startListening({ continuous: true });
+            dateCreatedRef.current = new Date();
           }}
           onSessionEnd={() => {
             SpeechRecognition.stopListening();
             mutation.mutate(data.id);
             presentationToPushMutation.mutate({
               presentationId: data.presentation.id,
+              transcript,
+              dateCreated: dateCreatedRef.current,
+              elapsedTime: Date.now() - dateCreatedRef.current.getTime(),
             });
           }}
         >

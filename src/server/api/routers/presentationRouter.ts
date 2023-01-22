@@ -1,5 +1,9 @@
-import { getFlashcardSchema } from "../../../schemas/flashcard";
-import { createPresentationSchema, getPresentationSchema, updatePresentationSchema } from "../../../schemas/presentation";
+import { TRPCClientError } from "@trpc/client";
+import {
+  createPresentationSchema,
+  getPresentationSchema,
+  updatePresentationSchema,
+} from "../../../schemas/presentation";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const presentationRouter = createTRPCRouter({
@@ -39,7 +43,7 @@ export const presentationRouter = createTRPCRouter({
               flashcards: { createMany: { data: input.flashcards } },
             },
           });
-          const createdQueue = await ctx.prisma.queue.create({
+          await ctx.prisma.queue.create({
             data: {
               presentationId: presentation.id,
             },
@@ -48,18 +52,41 @@ export const presentationRouter = createTRPCRouter({
       }
       // Queue should only have length of 1
       else {
+        throw new TRPCClientError("There is already a presentation queued!");
       }
-      return;
+    }),
+  queueExistingPresentation: protectedProcedure
+    .input(getPresentationSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Check if queue is empty
+      const queue = await ctx.prisma.queue.count({
+        where: {
+          presentation: {
+            user: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+      if (!queue) {
+        await ctx.prisma.queue.create({
+          data: {
+            presentationId: input.id,
+          },
+        });
+      } else {
+        throw new TRPCClientError("There is already a presentation queued!");
+      }
     }),
   getPresentation: protectedProcedure
     .input(getPresentationSchema)
-    .query(async ({ctx, input}) => {
+    .query(async ({ ctx, input }) => {
       return await ctx.prisma.presentation.findUnique({
-        where: {id: input.id},
+        where: { id: input.id },
         include: {
           flashcards: true,
-        }
-      })
+        },
+      });
     }),
   update: protectedProcedure
       .input(updatePresentationSchema)
@@ -68,6 +95,10 @@ export const presentationRouter = createTRPCRouter({
           where: {
               presentationId: input.id,
           }
+        })
+        const flashcardWithNoId = input.flashcards.map((flashcard) => {
+          const {id, ...rest} = flashcard;
+          return rest;
         })
         const updateUser = await ctx.prisma.presentation.update({
           where: {
@@ -78,24 +109,8 @@ export const presentationRouter = createTRPCRouter({
             title: input.title,
             idealTime: input.idealTime,
             updatedAt: input.dateCreated,
-            flashcards: { createMany: {data: input.flashcards }}
+            flashcards: { createMany: {data: [...flashcardWithNoId, ...input.moreFlashcards]} }
           },
         })
       })
 });
-
-// export const attemptRouter = createTRPCRouter({
-//   getAll: protectedProcedure.query(async ({ ctx }) => {
-//     const first = await ctx.prisma.presentation.findFirst(
-//       {
-//         select: { id: true },
-//         where: { userId: ctx.session.user.id }
-//       }
-//     );
-//     return await ctx.prisma.attempt.findMany({
-//       where: {
-//         presentationId: first?.id
-//       },
-//     });
-//   }),
-// });

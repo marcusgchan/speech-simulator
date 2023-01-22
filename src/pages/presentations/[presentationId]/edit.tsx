@@ -1,14 +1,14 @@
 import router, { useRouter } from "next/router";
 import { useState } from "react";
 import { updatePresentationSchema } from "../../../schemas/presentation";
-import { api, RouterOutputs } from "../../../utils/api";
+import { api, type RouterOutputs } from "../../../utils/api";
+import { useSnackbarDispatch } from "../../../components/Snackbar";
 
 export default function Edit() {
   const router = useRouter();
-  const { data, isError, isLoading } =
-    api.presentation.getPresentation.useQuery({
-      id: String(router.query.presentationId),
-    });
+  const { data, isLoading } = api.presentation.getPresentation.useQuery({
+    id: String(router.query.presentationId),
+  });
   if (isLoading || !data) {
     return <div>Loading</div>;
   }
@@ -18,11 +18,11 @@ export default function Edit() {
 function Inner({
   data,
 }: {
-  data: RouterOutputs["presentation"]["getPresentation"];
+  data: NonNullable<RouterOutputs["presentation"]["getPresentation"]>;
 }) {
-  if (!data) return <></>;
   let cards = "";
   const newCards: { rank: number; text: string; id: string }[] = [];
+  const moreCards: { rank: number; text: string }[] = [];
   const [presentation, setPresentation] = useState({
     title: data.title,
     idealTime: data.idealTime,
@@ -35,7 +35,22 @@ function Inner({
   }
 
   const [speech, setSpeech] = useState(cards);
-  const mutation = api.presentation.update.useMutation();
+  const snackDispatch = useSnackbarDispatch();
+  const mutation = api.presentation.update.useMutation({
+    onSuccess() {
+      snackDispatch({
+        type: "SUCCESS",
+        message: "Sucessfully updated and queued presentation",
+      });
+      router.push("/presentations");
+    },
+    onError(error) {
+      snackDispatch({
+        type: "ERROR",
+        message: error.message,
+      });
+    },
+  });
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div>
@@ -57,7 +72,7 @@ function Inner({
       text-gray-700
       transition
       ease-in-out
-      focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+      focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
     "
             value={presentation.title}
             onChange={(e) =>
@@ -105,7 +120,7 @@ function Inner({
       text-gray-700
       transition
       ease-in-out
-      focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none
+      focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none
     "
             value={speech}
             rows={5}
@@ -118,7 +133,7 @@ function Inner({
       </p>
       <button
         type="button"
-        className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
         onClick={async () => {
           const card = speech.split("|");
           for (let i = 0; i < card.length; i++) {
@@ -131,17 +146,28 @@ function Inner({
               };
             }
           }
+          if (card.length > data.flashcards.length) {
+            for (let i = 0; i < card.length - data.flashcards.length; i++) {
+              moreCards[i] = {
+                rank: i + data.flashcards.length + 1,
+                text: card[i + data.flashcards.length] as string,
+              };
+            }
+          }
           const result = updatePresentationSchema.safeParse({
             ...presentation,
             id: data?.id as string,
             flashcards: newCards,
+            moreFlashcards: moreCards,
             dateCreated: new Date(),
           });
           if (result.success) {
             mutation.mutate(result.data);
-            router.push('/presentations')
           } else {
-            console.log(result.error);
+            snackDispatch({
+              type: "ERROR",
+              message: "Name and Expected fields are required",
+            });
           }
         }}
       >
