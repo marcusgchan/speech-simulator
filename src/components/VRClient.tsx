@@ -5,7 +5,6 @@ import SpeechRecognition, {
 import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import {
   VRButton,
-  ARButton,
   XR,
   Controllers,
   Hands,
@@ -52,6 +51,7 @@ const VRClient = () => {
   const mutation = api.queue.deleteQueue.useMutation();
   const presentationToPushMutation =
     api.attempt.addPresentationToPush.useMutation();
+  const dateCreatedRef = useRef<Date>(new Date());
 
   if (!browserSupportsSpeechRecognition) {
     return <span> Browser does not support speech to text.</span>;
@@ -89,12 +89,16 @@ const VRClient = () => {
         <XR
           onSessionStart={() => {
             SpeechRecognition.startListening({ continuous: true });
+            dateCreatedRef.current = new Date();
           }}
           onSessionEnd={() => {
             SpeechRecognition.stopListening();
             mutation.mutate(data.id);
             presentationToPushMutation.mutate({
               presentationId: data.presentation.id,
+              transcript,
+              dateCreated: dateCreatedRef.current,
+              elapsedTime: Date.now() - dateCreatedRef.current.getTime(),
             });
           }}
         >

@@ -11,6 +11,9 @@ export const getAttemptSchema = z.object({
 
 export const addPresentationToPush = z.object({
   presentationId: z.string(),
+  transcript: z.string(),
+  dateCreated: z.date(),
+  elapsedTime: z.number(),
 });
 
 export const deletePresentationToPush = z.object({

@@ -8,8 +8,20 @@ import {
 export const attemptRouter = createTRPCRouter({
   getAll: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
     const first = await ctx.prisma.presentation.findFirst({
-      where: { userId: input },
+      where: { AND: [{ id: input }, { userId: ctx.session.user.id }] },
     });
+    console.log(
+      await ctx.prisma.attempt.findMany({
+        where: {
+          presentationId: first?.id,
+        },
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+        ],
+      })
+    );
     return await ctx.prisma.attempt.findMany({
       where: {
         presentationId: first?.id,
@@ -24,6 +36,14 @@ export const attemptRouter = createTRPCRouter({
   addPresentationToPush: protectedProcedure
     .input(addPresentationToPush)
     .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.attempt.create({
+        data: {
+          speech: input.transcript,
+          timeTaken: input.elapsedTime * 1000,
+          presentationId: input.presentationId,
+          createdAt: input.dateCreated,
+        },
+      });
       await ctx.prisma.presentationToPush.create({
         data: {
           presentationId: input.presentationId,
