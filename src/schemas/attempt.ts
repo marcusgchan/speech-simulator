@@ -9,7 +9,11 @@ export const getAttemptSchema = z.object({
   presentationId: z.number(),
 });
 
-export const addAttemptToPushSchema = z.object({
+export const addPresentationToPush = z.object({
   userId: z.string(),
-  attemptId: z.string(),
+  presentationId: z.string(),
+});
+
+export const deletePresentationToPush = z.object({
+  presentationId: z.string(),
 });

@@ -56,7 +56,6 @@ model User {
   accounts      Account[]
   sessions      Session[]
   presentation  Presentation[]
-  attemptsToPush AttemptsToPush[]
 }
 
 model VerificationToken {
@@ -74,11 +73,12 @@ model Presentation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId     String
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  flashcards Flashcard[]
-  attempt    Attempt[]
-  queue      Queue[]
+  userId             String
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flashcards         Flashcard[]
+  attempt            Attempt[]
+  queue              Queue[]
+  presentationToPush PresentationToPush?
 }
 
 model Flashcard {
@@ -100,7 +100,6 @@ model Attempt {
 
   presentationId String
   presentation   Presentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
-  attemptsToPush AttemptsToPush[]
 }
 
 model Queue {
@@ -110,11 +109,8 @@ model Queue {
   createdAt      DateTime     @default(now())
 }
 
-model AttemptsToPush {
-  userId String
-  User User @relation(fields: [userId], references: [id])
-  attemptId String
-  attempt Attempt @relation(fields: [attemptId], references: [id])
-
-  @@id([userId, attemptId])
+model PresentationToPush {
+  id             String       @id @default(cuid())
+  presentationId String       @unique
+  presentation   Presentation @relation(fields: [presentationId], references: [id])
 }
