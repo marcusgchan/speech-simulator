@@ -1,3 +1,4 @@
+import { TRPCClientError } from "@trpc/client";
 import {
   createPresentationSchema,
   getPresentationSchema,
@@ -42,7 +43,7 @@ export const presentationRouter = createTRPCRouter({
               flashcards: { createMany: { data: input.flashcards } },
             },
           });
-          const createdQueue = await ctx.prisma.queue.create({
+          await ctx.prisma.queue.create({
             data: {
               presentationId: presentation.id,
             },
@@ -51,8 +52,8 @@ export const presentationRouter = createTRPCRouter({
       }
       // Queue should only have length of 1
       else {
+        throw new TRPCClientError("There is already a presentation queued!");
       }
-      return;
     }),
   queueExistingPresentation: protectedProcedure
     .input(getPresentationSchema)
@@ -73,6 +74,8 @@ export const presentationRouter = createTRPCRouter({
             presentationId: input.id,
           },
         });
+      } else {
+        throw new TRPCClientError("There is already a presentation queued!");
       }
     }),
   getPresentation: protectedProcedure

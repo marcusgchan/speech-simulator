@@ -5,6 +5,7 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 import { useRouter } from "next/router";
+import { SnackbarProvider } from "../components/Snackbar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -24,9 +25,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const mutation = api.attempt.deletePresentationToPush.useMutation();
   return (
     <SessionProvider session={session}>
-      <Auth>
-        <Component {...pageProps} />
-      </Auth>
+      <SnackbarProvider>
+        <Auth>
+          <Component {...pageProps} />
+        </Auth>
+      </SnackbarProvider>
     </SessionProvider>
   );
 };

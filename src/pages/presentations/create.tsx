@@ -2,15 +2,27 @@ import { useState } from "react";
 import router from "next/router";
 import { api } from "../../utils/api";
 import { createPresentationSchema } from "../../schemas/presentation";
+import { useSnackbarDispatch } from "../../components/Snackbar";
 
 export default function Create() {
   const [speech, addSpeech] = useState("");
   const cards: { rank: number; text: string }[] = [];
-  const mutation = api.presentation.create.useMutation();
+  const mutation = api.presentation.create.useMutation({
+    onError(error) {
+      snackDispatch({
+        type: "ERROR",
+        message: error.message,
+      });
+    },
+    onSuccess() {
+      router.push("/");
+    },
+  });
   const [formData, setFormData] = useState({
     title: "",
     idealTime: 30,
   });
+  const snackDispatch = useSnackbarDispatch();
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div>
@@ -108,9 +120,11 @@ export default function Create() {
           });
           if (result.success) {
             mutation.mutate(result.data);
-            router.push("/");
           } else {
-            console.log(result.error);
+            snackDispatch({
+              type: "ERROR",
+              message: "Name and Expected fields are required",
+            });
           }
         }}
       >
