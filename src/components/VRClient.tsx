@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
@@ -22,7 +22,34 @@ const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(
 );
 SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
+const cards: { id: string; rank: number; text: string }[] = [
+  {
+    id: "wait",
+    rank: 1,
+    text: "hello blah blah nlaj nalnln nlbalh nalnln nlbalh hello blah blah nlaj nalnln nlbalh nalnln nlbalh",
+  },
+  { id: "lol", rank: 2, text: "easy easy easy easy easy" },
+];
+
 const VRClient = () => {
+  const [cardIndex, setCardIndex] = useState(0);
+  const increment = () => {
+    if (cardIndex + 1 === cards.length) {
+      setCardIndex(cardIndex);
+    } else {
+      setCardIndex(cardIndex + 1);
+    }
+  };
+  const decrement = () => {
+    if (cardIndex === 0) {
+      setCardIndex(cardIndex);
+    } else {
+      setCardIndex(cardIndex - 1);
+    }
+  };
+  const isLeftPressed = useRef(false);
+  const isRightPressed = useRef(false);
+
   const {
     transcript,
     listening,
@@ -63,11 +90,21 @@ const VRClient = () => {
           }}
         >
           <Controllers />
-          <PlayerController />
+          <PlayerController
+            cardIndex={cardIndex}
+            increment={increment}
+            decrement={decrement}
+            isLeftPressed={isLeftPressed}
+            isRightPressed={isRightPressed}
+          />
           <Hands />
           <Model />
           <Interactive>
-            <mesh position={[-0.05, 1.1, 0.8]} scale={[1.7, 0.7, 0.01]} rotation={[0, 9.5, 0]}>
+            <mesh
+              position={[-0.05, 1.1, 0.8]}
+              scale={[1.7, 0.7, 0.01]}
+              rotation={[0, 9.5, 0]}
+            >
               <mesh position={[-0.49, 0.45, 0.6]}>
                 <Text
                   scale={[0.1, 0.2, 0.1]}
@@ -78,7 +115,7 @@ const VRClient = () => {
                   maxWidth={10}
                   whiteSpace="normal"
                 >
-                  hello blah blah nlaj nalnln nlbalh nalnln nlbalh hello blah blah nlaj nalnln nlbalh nalnln nlbalh
+                  {cards[cardIndex]?.text}
                 </Text>
               </mesh>
               <boxGeometry />
@@ -98,9 +135,19 @@ const VRClient = () => {
 function PlayerController({
   translationSpeed = 2,
   rotationSpeed = 2,
+  cardIndex,
+  increment,
+  decrement,
+  isLeftPressed: isLeftPressed,
+  isRightPressed: isRightPressed
 }: {
   translationSpeed?: number;
   rotationSpeed?: number;
+  cardIndex: number;
+  isLeftPressed: React.MutableRefObject<boolean>;
+  isRightPressed: React.MutableRefObject<boolean>;
+  increment: () => void;
+  decrement: () => void;
 }): null {
   const {
     // An array of connected `XRController`
@@ -142,6 +189,14 @@ function PlayerController({
       if (rightControllerGamepad.axes[2]) {
         player.rotateY(delta * rotationSpeed * -rightControllerGamepad.axes[2]);
       }
+      if (rightControllerGamepad.buttons[0]?.pressed) {
+        if (!isRightPressed.current) {
+          isRightPressed.current = true;
+          increment();
+        }
+      } else {
+        isRightPressed.current = false;
+      }
     }
 
     // Player translation
@@ -168,6 +223,14 @@ function PlayerController({
             -cameraWorldDirecitonNormalized.z
           ).multiplyScalar(translationDz)
         );
+      }
+      if (leftControllerGamepad.buttons[0]?.pressed) {
+        if (!isLeftPressed.current) {
+          isLeftPressed.current = true;
+          decrement();
+        } else {
+        isLeftPressed.current = false;
+        }
       }
     }
 
