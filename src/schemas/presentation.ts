@@ -24,6 +24,12 @@ export const updatePresentationSchema = z.object({
       rank: z.number(),
     })
     .array(),
+  moreFlashcards: z
+    .object({
+      text: z.string(),
+      rank: z.number(),
+    })
+    .array(),
 });
 
 export const getPresentationSchema = z.object({

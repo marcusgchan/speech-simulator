@@ -89,23 +89,28 @@ export const presentationRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-    .input(updatePresentationSchema)
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.flashcard.deleteMany({
-        where: {
-          presentationId: input.id,
-        },
-      });
-      const updateUser = await ctx.prisma.presentation.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          title: input.title,
-          idealTime: input.idealTime,
-          updatedAt: input.dateCreated,
-          flashcards: { createMany: { data: input.flashcards } },
-        },
-      });
-    }),
+      .input(updatePresentationSchema)
+      .mutation(async ({ ctx, input }) => {
+        await ctx.prisma.flashcard.deleteMany({
+          where: {
+              presentationId: input.id,
+          }
+        })
+        const flashcardWithNoId = input.flashcards.map((flashcard) => {
+          const {id, ...rest} = flashcard;
+          return rest;
+        })
+        const updateUser = await ctx.prisma.presentation.update({
+          where: {
+            id: input.id,
+            
+          },
+          data: {
+            title: input.title,
+            idealTime: input.idealTime,
+            updatedAt: input.dateCreated,
+            flashcards: { createMany: {data: [...flashcardWithNoId, ...input.moreFlashcards]} }
+          },
+        })
+      })
 });
