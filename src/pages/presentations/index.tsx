@@ -18,7 +18,7 @@ export default function Index() {
   }, []);
 
   const isMobile = width <= 1000;
-
+  const router = useRouter();
   const { data, isLoading, isError } = api.presentation.getAll.useQuery();
 
   if (!data || isLoading)
@@ -27,14 +27,22 @@ export default function Index() {
         <Loader></Loader>
       </div>
     );
-  if (isError) return <div>something died¡</div>;
+  if (isError) return <div>something died</div>;
 
   return (
     <div>
       <div className="p-4">
-        <h1 className="py-10 px-4 text-3xl font-extrabold">
-          Previous Presentations
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="p-r py-10 px-4 text-3xl font-extrabold">
+            Previous Presentations
+          </h1>
+          <button
+            onClick={() => router.push("/")}
+            className="hover:bg-emeral-700 rounded-xl bg-accent py-2 px-4 hover:bg-emerald-700"
+          >
+            Home Page
+          </button>
+        </div>
         <section
           className={`grid auto-rows-fr ${
             isMobile ? "grid-cols-1 " : "grid-cols-4"
