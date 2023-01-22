@@ -53,7 +53,7 @@ const AuthShowcase: React.FC = () => {
         </button>
         <button
           className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
-          onClick={() => navigate("/presentations/previous")}
+          onClick={() => navigate("/presentations")}
         >
           Previous Presentations
         </button>
