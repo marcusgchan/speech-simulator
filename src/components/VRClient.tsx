@@ -17,7 +17,6 @@ import { Text, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clientEnv } from "../env/schema.mjs";
 import { api } from "../utils/api";
-import { Loader } from "./Loader.jsx";
 const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(
   clientEnv.NEXT_PUBLIC_SPEECHLY_CLIENT_ID as string
 );
@@ -65,14 +64,6 @@ const VRClient = () => {
   const { data, isLoading } = api.queue.getQueueAndPresentation.useQuery("", {
     refetchInterval: 5 * 1000,
   });
-
-  if (isLoading) {
-    return (
-      <div>
-        <Loader></Loader>
-      </div>
-    );
-  }
 
   if (!data)
     return (
