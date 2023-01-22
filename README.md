@@ -1,9 +1,9 @@
 # VR Speech Simulator
 
-_Authors: Marcus Chan, Tony, Kentaro, Danilo_
-
+_Authors: Marcus C, Tony F, Kentaro L, Danilo V_
 
 ## About
+
 VR Speech Simulator is a public speaking simulator that utilizes modern web technologies to construct an immersive virtual reality experience. Are you looking for new ways to practice your public speaking? Try the VR Speech Simulator!
 
 Import a script to create a Presentation. And put on a headset to get started. Each attempt you make through VR Speech Sim keeps track of your speaking patterns and ways to improve your presentation.
@@ -17,7 +17,6 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - [tRPC](https://trpc.io/)
 - [React](https://reactjs.org/)
 
-
 ## Getting Started
 
 - clone the repo
@@ -26,3 +25,18 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - npx generate
 - npm run dev
 
+##
+
+## Gallery
+
+##
+
+![](website_images/img.png)
+
+###
+
+![](website_images/img_1.png)
+
+## VR Scene
+
+- Blender Classroom Scene
