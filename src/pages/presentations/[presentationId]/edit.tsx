@@ -3,6 +3,7 @@ import { useState } from "react";
 import { updatePresentationSchema } from "../../../schemas/presentation";
 import { api, type RouterOutputs } from "../../../utils/api";
 import { useSnackbarDispatch } from "../../../components/Snackbar";
+import { Loader } from "../../../components/Loader";
 
 export default function Edit() {
   const router = useRouter();
@@ -10,7 +11,11 @@ export default function Edit() {
     id: String(router.query.presentationId),
   });
   if (isLoading || !data) {
-    return <div>Loading</div>;
+    return (
+      <div>
+        <Loader></Loader>
+      </div>
+    );
   }
   return <Inner data={data} />;
 }
