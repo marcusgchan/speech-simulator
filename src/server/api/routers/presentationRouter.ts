@@ -1,4 +1,3 @@
-import { getFlashcardSchema } from "../../../schemas/flashcard";
 import {
   createPresentationSchema,
   getPresentationSchema,
