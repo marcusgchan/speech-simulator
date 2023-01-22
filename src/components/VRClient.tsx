@@ -65,7 +65,11 @@ const VRClient = () => {
     refetchInterval: 5 * 1000,
   });
 
-  if (isLoading || !data)
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (!data)
     return (
       <div className="mt-16 text-center text-lg">
         There are no presentations that are queued.
