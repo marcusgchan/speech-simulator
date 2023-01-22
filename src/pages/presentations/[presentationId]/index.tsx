@@ -179,29 +179,87 @@ function DisplayAttempt({
   const wordsPerMinute = Math.round(speechArray.length / timeTakenFormatted);
 
   const fillerWords = fillerWordCount(speechArray, ["like", "and"]);
-  const timeDiff = (displayedAttempt.timeTaken / 1000) - presentationIdealTime;
+  const timeDiff = displayedAttempt.timeTaken / 1000 - presentationIdealTime;
 
   const timeDiffFormatted = Math.round((Math.abs(timeDiff) / 60) * 100) / 100;
 
+  const diffString =
+    timeDiffFormatted <= 0.5 ? (
+      "You were very close to your time goal!"
+    ) : timeDiff > 0 ? (
+      <span>
+        Consider {<span className="text-accent">shortening</span>} your script.
+      </span>
+    ) : (
+      <span>
+        Consider adding a few{<span className="text-accent"> more </span>}{" "}
+        points to your script.
+      </span>
+    );
+
+  const wpmString =
+    wordsPerMinute >= 100 && wordsPerMinute <= 150 ? (
+      <span>
+        Your talking pace matched the{" "}
+        {<span className="text-accent">ideal range</span>} of about 100-150 WPM!
+      </span>
+    ) : wordsPerMinute <= 100 ? (
+      <span>
+        If possible, try talking a little{" "}
+        {<span className="text-accent">faster</span>}.
+      </span>
+    ) : (
+      <span>
+        Try {<span className="text-accent">lowering</span>} your talking speed
+        by a little, everyone wants to hear you nice and clear!
+      </span>
+    );
+
+  const fillterString =
+    fillerWords / speechArray.length >= 0.2 ? (
+      <span>
+        {" "}
+        Finally, your presentation would level up if you avoided{" "}
+        {<span className="text-accent">filler words</span>} such as
+        &quot;like&quot;, &quot;um&quot;, etc.
+      </span>
+    ) : (
+      ""
+    );
+
   return (
-    <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
-      <div className="py-10">
+    <div className="flex h-96 w-80 flex-col justify-around rounded-xl border-2 p-4 text-left">
+      <div className="flex flex-col justify-center">
         <div>
-          <h1> Time taken: {timeTakenFormatted} minutes</h1>
-        </div>
-        <div>
-          <h1> Words per minute: {wordsPerMinute} WPM</h1>
-        </div>
-        <div>
-          <h1> Potential filler words said: {fillerWords}</h1>
+          <h1>
+            {" "}
+            <b>Time taken:</b> {timeTakenFormatted} minutes
+          </h1>
         </div>
         <div>
           <h1>
-            You went {timeDiff > 0 ? "over" : "under"} time by:{" "}
+            {" "}
+            <b>Words per minute:</b> {wordsPerMinute} WPM
+          </h1>
+        </div>
+        <div>
+          <h1>
+            {" "}
+            <b>Potential filler words said:</b> {fillerWords}
+          </h1>
+        </div>
+        <div>
+          <h1>
+            <b>{timeDiff > 0 ? "Over" : "Under"} goal time by: </b>
             {timeDiffFormatted} minutes
           </h1>
         </div>
       </div>
+      <p>
+        Great work on {<span className="text-accent">completing</span>} your
+        presentation! {diffString} Now let&apos;s talk about pace. {wpmString}
+        {fillterString} Good luck on your presentation!
+      </p>
     </div>
   );
 }

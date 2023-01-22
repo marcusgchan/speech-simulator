@@ -34,4 +34,4 @@ export const updatePresentationSchema = z.object({
 
 export const getPresentationSchema = z.object({
   id: z.string(),
-})
+});

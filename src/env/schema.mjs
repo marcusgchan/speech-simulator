@@ -17,7 +17,7 @@ export const serverSchema = z.object({
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url(),
+    process.env.VERCEL ? z.string() : z.string().url()
   ),
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
@@ -43,7 +43,8 @@ export const serverEnv = {
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_SPEECHLY_CLIENT_ID: z.string()
+  NEXT_PUBLIC_SPEECHLY_CLIENT_ID: z.string(),
+  NEXT_PUBLIC_BASE_URL: z.string().url(),
 });
 
 /**
@@ -53,5 +54,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_SPEECHLY_CLIENT_ID: process.env.NEXT_PUBLIC_SPEECHLY_CLIENT_ID
+  NEXT_PUBLIC_SPEECHLY_CLIENT_ID: process.env.NEXT_PUBLIC_SPEECHLY_CLIENT_ID,
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
 };

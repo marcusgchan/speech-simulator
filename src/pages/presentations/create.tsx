@@ -109,31 +109,39 @@ export default function Create() {
       <p className="pb-16 text-xs font-bold">
         Use | to separate into different cards
       </p>
-      <button
-        type="button"
-        className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
-        onClick={() => {
-          const card = speech.split("|");
-          for (let i = 0; i < card.length; i++) {
-            cards[i] = { rank: i + 1, text: card[i] as string };
-          }
-          const result = createPresentationSchema.safeParse({
-            ...formData,
-            dateCreated: new Date(),
-            flashcards: cards,
-          });
-          if (result.success) {
-            mutation.mutate(result.data);
-          } else {
-            snackDispatch({
-              type: "ERROR",
-              message: "Name and Expected fields are required",
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={() => router.push("/")}
+          className="hover:bg-emeral-700 w-30 rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
+        >
+          Home Page
+        </button>
+        <button
+          type="button"
+          className="w-30 rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
+          onClick={() => {
+            const card = speech.split("|");
+            for (let i = 0; i < card.length; i++) {
+              cards[i] = { rank: i + 1, text: card[i] as string };
+            }
+            const result = createPresentationSchema.safeParse({
+              ...formData,
+              dateCreated: new Date(),
+              flashcards: cards,
             });
-          }
-        }}
-      >
-        Create speech
-      </button>
+            if (result.success) {
+              mutation.mutate(result.data);
+            } else {
+              snackDispatch({
+                type: "ERROR",
+                message: "Name and Expected fields are required",
+              });
+            }
+          }}
+        >
+          Create speech
+        </button>
+      </div>
     </div>
   );
 }

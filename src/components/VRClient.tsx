@@ -61,7 +61,7 @@ const VRClient = () => {
     return <span> Please allow access to microphone.</span>;
   }
 
-  const { data, isLoading } = api.queue.getQueueAndPresentation.useQuery("", {
+  const { data } = api.queue.getQueueAndPresentation.useQuery("", {
     refetchInterval: 5 * 1000,
   });
 
@@ -76,16 +76,6 @@ const VRClient = () => {
 
   return (
     <>
-      <div>
-        <p>Microphone: {listening ? "on" : "off"}</p>
-        <button
-          onClick={() => SpeechRecognition.startListening({ continuous: true })}
-        >
-          Start
-        </button>
-        <button onClick={SpeechRecognition.stopListening}>Stop</button>
-        <button onClick={resetTranscript}>Reset</button>
-      </div>
       <VRButton />
       <Canvas>
         <XR
@@ -129,14 +119,14 @@ const VRClient = () => {
                   color={"black"}
                   anchorX="left"
                   anchorY="top"
-                  maxWidth={10}
+                  maxWidth={9}
                   whiteSpace="normal"
                 >
                   {cards[cardIndex]?.text}
                 </Text>
               </mesh>
               <boxGeometry />
-              <meshBasicMaterial color="blue" />
+              <meshBasicMaterial color="white" />
             </mesh>
           </Interactive>
           <LightBulb />
@@ -259,7 +249,7 @@ function LightBulb(props: MeshProps) {
 }
 
 function Model() {
-  const model = useGLTF("http://localhost:3000/classroom.glb");
+  const model = useGLTF(`${clientEnv.NEXT_PUBLIC_BASE_URL}/classroom.glb`);
   return (
     <primitive
       object={model.scene}
