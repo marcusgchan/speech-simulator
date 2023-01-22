@@ -61,13 +61,16 @@ const VRClient = () => {
     return <span> Please allow access to microphone.</span>;
   }
 
-  const test = api.queue.getQueueAndPresentation.useQuery("", {
+  const { data, isLoading } = api.queue.getQueueAndPresentation.useQuery("", {
     refetchInterval: 5 * 1000,
-  }).data;
+  });
 
-  const data = test;
-
-  if (!data) return <span>Loading</span>;
+  if (isLoading || !data)
+    return (
+      <div className="mt-16 text-center text-lg">
+        There are no presentations that are queued.
+      </div>
+    );
 
   const cards = data.presentation.flashcards;
 
@@ -82,7 +85,6 @@ const VRClient = () => {
         </button>
         <button onClick={SpeechRecognition.stopListening}>Stop</button>
         <button onClick={resetTranscript}>Reset</button>
-        <p>{transcript}</p>
       </div>
       <VRButton />
       <Canvas>
