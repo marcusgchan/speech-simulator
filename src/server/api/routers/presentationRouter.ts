@@ -7,7 +7,7 @@ import {
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const presentationRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx, input }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     try {
       const res = await ctx.prisma.presentation.findMany({
         where: {
@@ -89,28 +89,32 @@ export const presentationRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-      .input(updatePresentationSchema)
-      .mutation(async ({ ctx, input }) => {
-        await ctx.prisma.flashcard.deleteMany({
-          where: {
-              presentationId: input.id,
-          }
-        })
-        const flashcardWithNoId = input.flashcards.map((flashcard) => {
-          const {id, ...rest} = flashcard;
-          return rest;
-        })
-        const updateUser = await ctx.prisma.presentation.update({
-          where: {
-            id: input.id,
-            
+    .input(updatePresentationSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.flashcard.deleteMany({
+        where: {
+          presentationId: input.id,
+        },
+      });
+      const flashcardWithNoId = input.flashcards.map((flashcard) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, ...rest } = flashcard;
+        return rest;
+      });
+      await ctx.prisma.presentation.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          idealTime: input.idealTime,
+          updatedAt: input.dateCreated,
+          flashcards: {
+            createMany: {
+              data: [...flashcardWithNoId, ...input.moreFlashcards],
+            },
           },
-          data: {
-            title: input.title,
-            idealTime: input.idealTime,
-            updatedAt: input.dateCreated,
-            flashcards: { createMany: {data: [...flashcardWithNoId, ...input.moreFlashcards]} }
-          },
-        })
-      })
+        },
+      });
+    }),
 });
