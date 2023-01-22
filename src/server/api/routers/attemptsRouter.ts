@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { addAttemptToPushSchema } from "../../../schemas/attempt";
+import {
+  addPresentationToPush,
+  deletePresentationToPush,
+} from "../../../schemas/attempt";
 
 export const attemptRouter = createTRPCRouter({
   getAll: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
@@ -18,18 +21,41 @@ export const attemptRouter = createTRPCRouter({
       ],
     });
   }),
-  addAttemptToPush: protectedProcedure
-    .input(addAttemptToPushSchema)
+  addPresentationToPush: protectedProcedure
+    .input(addPresentationToPush)
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.attemptsToPush.create({
-        data: input,
+      await ctx.prisma.presentationToPush.create({
+        data: {
+          presentationId: input.presentationId,
+        },
       });
     }),
-  getAttemptsToPush: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.attemptsToPush.findFirst({
+  getPresentationToPush: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.presentationToPush.findFirst({
+      select: {
+        presentationId: true,
+      },
       where: {
-        userId: ctx.session.user.id,
+        presentation: {
+          userId: ctx.session.user.id,
+        },
       },
     });
   }),
+  deletePresentationToPush: protectedProcedure
+    .input(deletePresentationToPush)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.presentationToPush.deleteMany({
+        where: {
+          AND: [
+            { presentationId: input.presentationId },
+            {
+              presentation: {
+                userId: ctx.session.user.id,
+              },
+            },
+          ],
+        },
+      });
+    }),
 });

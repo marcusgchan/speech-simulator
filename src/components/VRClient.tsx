@@ -17,19 +17,11 @@ import { Canvas, useFrame, type MeshProps } from "@react-three/fiber";
 import { Text, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { clientEnv } from "../env/schema.mjs";
+import { api } from "../utils/api";
 const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(
   clientEnv.NEXT_PUBLIC_SPEECHLY_CLIENT_ID as string
 );
 SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
-
-const cards: { id: string; rank: number; text: string }[] = [
-  {
-    id: "wait",
-    rank: 1,
-    text: "hello blah blah nlaj nalnln nlbalh nalnln nlbalh hello blah blah nlaj nalnln nlbalh nalnln nlbalh",
-  },
-  { id: "lol", rank: 2, text: "easy easy easy easy easy" },
-];
 
 const VRClient = () => {
   const [cardIndex, setCardIndex] = useState(0);
@@ -66,6 +58,18 @@ const VRClient = () => {
     return <span> Please allow access to microphone.</span>;
   }
 
+  const test = api.queue.getQueueAndPresentation.useQuery("", {
+    refetchInterval: 5 * 1000,
+  }).data;
+
+  const data = test;
+
+  const mutation = api.queue.deleteQueue.useMutation();
+
+  if (!data) return <span>Loading</span>;
+
+  const cards = data.presentation.flashcards;
+
   return (
     <>
       <div>
@@ -87,6 +91,7 @@ const VRClient = () => {
           }}
           onSessionEnd={() => {
             SpeechRecognition.stopListening();
+            mutation.mutate(data.id);
           }}
         >
           <Controllers />
@@ -122,10 +127,6 @@ const VRClient = () => {
               <meshBasicMaterial color="blue" />
             </mesh>
           </Interactive>
-          <mesh position={[0, 1.1, -1]} scale={[0.6, 0.4, 0.2]}>
-            <boxGeometry />
-            <meshBasicMaterial color="blue" />
-          </mesh>
           <LightBulb />
         </XR>
       </Canvas>
@@ -139,7 +140,7 @@ function PlayerController({
   increment,
   decrement,
   isLeftPressed: isLeftPressed,
-  isRightPressed: isRightPressed
+  isRightPressed: isRightPressed,
 }: {
   translationSpeed?: number;
   rotationSpeed?: number;
@@ -229,8 +230,10 @@ function PlayerController({
           isLeftPressed.current = true;
           decrement();
         } else {
-        isLeftPressed.current = false;
+          isLeftPressed.current = false;
         }
+      }
+      if (leftControllerGamepad.buttons[0]?.pressed) {
       }
     }
 

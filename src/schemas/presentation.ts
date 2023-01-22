@@ -11,3 +11,7 @@ export const createPresentationSchema = z.object({
     })
     .array(),
 });
+
+export const getPresentationSchema = z.object({
+  id: z.string(),
+})

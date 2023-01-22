@@ -1,4 +1,4 @@
-import { createPresentationSchema } from "../../../schemas/presentation";
+import { createPresentationSchema, getPresentationSchema } from "../../../schemas/presentation";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const presentationRouter = createTRPCRouter({
@@ -50,6 +50,16 @@ export const presentationRouter = createTRPCRouter({
       }
       return;
     }),
+  getPresentation: protectedProcedure
+    .input(getPresentationSchema)
+    .query(async ({ctx, input}) => {
+      return await ctx.prisma.presentation.findUnique({
+        where: {id: input.id},
+        include: {
+          flashcards: true,
+        }
+      })
+    })
 });
 
 // export const attemptRouter = createTRPCRouter({

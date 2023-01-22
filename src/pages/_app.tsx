@@ -11,12 +11,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const router = useRouter();
-  const { data } = api.attempt.getAttemptsToPush.useQuery(undefined, {
+  // POTENTIAL BUG HERE IF USER CREATES 2 ATTEMPTS QUICKLY
+  const { data } = api.attempt.getPresentationToPush.useQuery(undefined, {
     refetchInterval: 5 * 1000,
   });
-  console.log(router.pathname);
-  if (data && router.pathname !== "/presentations/attempts") {
-    router.push(`/presentations/attempts`);
+  const mutation = api.attempt.deletePresentationToPush.useMutation();
+  if (data && router.pathname.includes("/presentations")) {
+    mutation.mutate({ presentationId: data.presentationId });
+    router.push(`/presentations/${data.presentationId}`);
   }
   return (
     <SessionProvider session={session}>
