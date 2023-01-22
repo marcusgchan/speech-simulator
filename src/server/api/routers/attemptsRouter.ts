@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { getPresentationSchema } from "../../../schemas/presentation";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
   export const attemptRouter = createTRPCRouter({
     getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -18,4 +17,3 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
       });
     }),
   });
-  
