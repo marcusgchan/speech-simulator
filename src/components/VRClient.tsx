@@ -66,7 +66,17 @@ const VRClient = () => {
 
   const mutation = api.queue.deleteQueue.useMutation();
 
-  if (!data) return <span>Loading</span>;
+  if (!data)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex items-end">
+          <div className="px-1 text-8xl text-accent">Loading...</div>{" "}
+          <div className="py-2 text-4xl text-slate-700">
+            Looking for session.
+          </div>
+        </div>
+      </div>
+    );
 
   const cards = data.presentation.flashcards;
 
