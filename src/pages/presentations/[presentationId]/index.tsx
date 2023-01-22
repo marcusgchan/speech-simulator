@@ -29,7 +29,7 @@ export default function Attempt() {
     return (
       <div
         key={attempt.id}
-        className="h-20 w-96 rounded-xl border-2 p-4 font-bold"
+        className="h-20 w-72 rounded-xl border-2 p-4 font-bold"
         onClick={() => {
           setSelectAttemptId(attempt.id);
         }}
@@ -41,28 +41,30 @@ export default function Attempt() {
 
   return (
     <>
-      <button
-        className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
-        // onClick={() => ()}
-      >
-        Start New Attempt
-      </button>
-      <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
-      <div className="outer-container flex flex-row">
-        <div className="attempts-list flex w-96 flex-col p-4">
-          {attemptsDivs}
+      <div className="flex flex-col items-center justify-center gap-12">
+        <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
+        <div className="outer-container flex flex-row gap-12">
+          <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4">
+            {attemptsDivs}
+          </div>
+          <HandleAttemptToDisplay
+            latestAttempt={latestAttempt}
+            selectedAttempt={selectedAttempt}
+          />
         </div>
-        <HandleAttemptToDisplay
-          latestAttempt={latestAttempt}
-          selectedAttempt={selectedAttempt}
-        />
+        <button
+          className="mx-2 rounded-xl bg-accent p-4 text-white"
+          // onClick={() => ()}
+        >
+          Start New Attempt
+        </button>
+        <button
+          className="mx-2 rounded-xl bg-accent p-4 text-white"
+          onClick={() => navigate("../")}
+        >
+          Previous presentations
+        </button>
       </div>
-      <button
-        className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
-        onClick={() => navigate("../")}
-      >
-        Go back to previous attempts
-      </button>
     </>
   );
 }
