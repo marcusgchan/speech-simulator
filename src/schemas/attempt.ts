@@ -10,7 +10,6 @@ export const getAttemptSchema = z.object({
 });
 
 export const addPresentationToPush = z.object({
-  userId: z.string(),
   presentationId: z.string(),
 });
 

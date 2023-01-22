@@ -49,6 +49,9 @@ const VRClient = () => {
     isMicrophoneAvailable,
     resetTranscript,
   } = useSpeechRecognition({});
+  const mutation = api.queue.deleteQueue.useMutation();
+  const presentationToPushMutation =
+    api.attempt.addPresentationToPush.useMutation();
 
   if (!browserSupportsSpeechRecognition) {
     return <span> Browser does not support speech to text.</span>;
@@ -63,8 +66,6 @@ const VRClient = () => {
   }).data;
 
   const data = test;
-
-  const mutation = api.queue.deleteQueue.useMutation();
 
   if (!data) return <span>Loading</span>;
 
@@ -92,6 +93,9 @@ const VRClient = () => {
           onSessionEnd={() => {
             SpeechRecognition.stopListening();
             mutation.mutate(data.id);
+            presentationToPushMutation.mutate({
+              presentationId: data.presentation.id,
+            });
           }}
         >
           <Controllers />
