@@ -1,4 +1,5 @@
-import { createPresentationSchema, getPresentationSchema } from "../../../schemas/presentation";
+import { getFlashcardSchema } from "../../../schemas/flashcard";
+import { createPresentationSchema, getPresentationSchema, updatePresentationSchema } from "../../../schemas/presentation";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const presentationRouter = createTRPCRouter({
@@ -59,7 +60,28 @@ export const presentationRouter = createTRPCRouter({
           flashcards: true,
         }
       })
-    })
+    }),
+  update: protectedProcedure
+      .input(updatePresentationSchema)
+      .mutation(async ({ ctx, input }) => {
+        await ctx.prisma.flashcard.deleteMany({
+          where: {
+              presentationId: input.id,
+          }
+        })
+        const updateUser = await ctx.prisma.presentation.update({
+          where: {
+            id: input.id,
+            
+          },
+          data: {
+            title: input.title,
+            idealTime: input.idealTime,
+            updatedAt: input.dateCreated,
+            flashcards: { createMany: {data: input.flashcards }}
+          },
+        })
+      })
 });
 
 // export const attemptRouter = createTRPCRouter({
