@@ -95,6 +95,7 @@ function Inner({
             name="time"
             min={1}
             value={presentation.idealTime}
+            className="border-rounded border px-3 py-1.5 text-base focus:border-accent focus:bg-white focus:text-gray-700 focus:outline-none"
             onChange={(e) => {
               if (isNaN(e.target.valueAsNumber)) {
                 setPresentation({ ...presentation, idealTime: 1 });
