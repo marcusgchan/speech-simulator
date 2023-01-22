@@ -2,10 +2,25 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
+import { useSnackbarDispatch } from "../../../components/Snackbar";
 
 export default function Attempt() {
   const [width, setWidth] = useState<number>(window.innerWidth);
-  const mutation = api.presentation.queueExistingPresentation.useMutation();
+  const snackDispatch = useSnackbarDispatch();
+  const mutation = api.presentation.queueExistingPresentation.useMutation({
+    onSuccess() {
+      snackDispatch({
+        type: "SUCCESS",
+        message: "Sucessfully queued presentation",
+      });
+    },
+    onError(error) {
+      snackDispatch({
+        type: "ERROR",
+        message: error.message,
+      });
+    },
+  });
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
