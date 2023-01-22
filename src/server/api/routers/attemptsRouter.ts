@@ -10,7 +10,8 @@ export const attemptRouter = createTRPCRouter({
     const first = await ctx.prisma.presentation.findFirst({
       where: { userId: input },
     });
-    return await ctx.prisma.attempt.findMany({
+    const presentationIdealTime = first?.idealTime;
+    const allAttempts = await ctx.prisma.attempt.findMany({
       where: {
         presentationId: first?.id,
       },
@@ -20,6 +21,7 @@ export const attemptRouter = createTRPCRouter({
         },
       ],
     });
+    return { attemptsList: allAttempts, idealTime: presentationIdealTime }
   }),
   addPresentationToPush: protectedProcedure
     .input(addPresentationToPush)

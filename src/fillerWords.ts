@@ -29,7 +29,7 @@ export const fillerWordCount = (
   }
   let count = 0;
   for (let i = 0; i < speechArr.length; i++) {
-    let key = speechArr[i]?.toLowerCase();
+    const key = speechArr[i]?.toLowerCase();
     if (fillerWordSet.has(key)) {
       if (originalHashmap.has(key)) {
         if (originalHashmap.get(key) > 0) {
