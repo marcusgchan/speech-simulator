@@ -1,15 +1,23 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
-import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
-import { clientEnv } from "../env/schema.mjs";
+import { SessionProvider, signIn, useSession } from "next-auth/react";
 import { api } from "../utils/api";
 
 import "../styles/globals.css";
+import { useRouter } from "next/router";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const router = useRouter();
+  const { data } = api.attempt.getAttemptsToPush.useQuery(undefined, {
+    refetchInterval: 5 * 1000,
+  });
+  console.log(router.pathname);
+  if (data && router.pathname !== "/presentations/attempts") {
+    router.push(`/presentations/attempts`);
+  }
   return (
     <SessionProvider session={session}>
       <Auth>
