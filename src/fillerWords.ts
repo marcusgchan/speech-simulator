@@ -16,7 +16,7 @@ export const fillerWordCount = (
   speechArr: string[],
   originalSpeechArr: string[]
 ) => {
-  let originalHashmap = new Map();
+  const originalHashmap = new Map();
   for (let i = 0; i < originalSpeechArr.length; i++) {
     const key = originalSpeechArr[i]?.toLowerCase();
     if (fillerWordSet.has(key)) {
