@@ -173,13 +173,13 @@ function DisplayAttempt({
   presentationIdealTime: number;
 }) {
   const timeTakenFormatted =
-    Math.round((displayedAttempt.timeTaken / 60) * 100) / 100;
+    Math.round((displayedAttempt.timeTaken / 60000) * 100) / 100;
 
   const speechArray = displayedAttempt.speech.split(" ");
   const wordsPerMinute = Math.round(speechArray.length / timeTakenFormatted);
 
   const fillerWords = fillerWordCount(speechArray, ["like", "and"]);
-  const timeDiff = displayedAttempt.timeTaken - presentationIdealTime;
+  const timeDiff = (displayedAttempt.timeTaken / 1000) - presentationIdealTime;
 
   const timeDiffFormatted = Math.round((Math.abs(timeDiff) / 60) * 100) / 100;
 

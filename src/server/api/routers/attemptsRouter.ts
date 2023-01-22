@@ -29,7 +29,7 @@ export const attemptRouter = createTRPCRouter({
       await ctx.prisma.attempt.create({
         data: {
           speech: input.transcript,
-          timeTaken: input.elapsedTime * 1000,
+          timeTaken: input.elapsedTime,
           presentationId: input.presentationId,
           createdAt: input.dateCreated,
         },

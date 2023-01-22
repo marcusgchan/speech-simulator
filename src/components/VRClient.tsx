@@ -95,12 +95,15 @@ const VRClient = () => {
           }}
           onSessionEnd={() => {
             SpeechRecognition.stopListening();
+            const dateNow = new Date();
+            const diffTime =
+              dateNow.getTime() - dateCreatedRef.current.getTime();
             mutation.mutate(data.id);
             presentationToPushMutation.mutate({
               presentationId: data.presentation.id,
               transcript,
               dateCreated: dateCreatedRef.current,
-              elapsedTime: Date.now() - dateCreatedRef.current.getTime(),
+              elapsedTime: diffTime,
             });
           }}
         >
@@ -226,11 +229,9 @@ function PlayerController({
         if (!isLeftPressed.current) {
           isLeftPressed.current = true;
           decrement();
-        } else {
-          isLeftPressed.current = false;
         }
-      }
-      if (leftControllerGamepad.buttons[0]?.pressed) {
+      } else {
+        isLeftPressed.current = false;
       }
     }
 
