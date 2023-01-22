@@ -22,6 +22,7 @@ function Inner({
 }) {
   let cards = "";
   const newCards: { rank: number; text: string; id: string }[] = [];
+  const moreCards: { rank: number; text: string}[] = [];
   const [presentation, setPresentation] = useState({
     title: data.title,
     idealTime: data.idealTime,
@@ -130,10 +131,19 @@ function Inner({
               };
             }
           }
+          if (card.length > data.flashcards.length) {
+            for (let i = 0; i < card.length - data.flashcards.length; i++) {
+                moreCards[i] = {
+                    rank: i + data.flashcards.length + 1,
+                    text: card[i + data.flashcards.length] as string,
+                }
+            }
+          }
           const result = updatePresentationSchema.safeParse({
             ...presentation,
             id: data?.id as string,
             flashcards: newCards,
+            moreFlashcards: moreCards,
             dateCreated: new Date(),
           });
           if (result.success) {
