@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
+import { fillerWordCount } from "../../../fillerWords";
 
 export default function Attempt() {
   const [width, setWidth] = useState<number>(window.innerWidth);
@@ -95,21 +96,48 @@ function HandleAttemptToDisplay({
   selectedAttempt: Attempt | undefined;
 }) {
   if (!selectedAttempt && latestAttempt) {
-    return (
-      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
-        Time Taken: {latestAttempt.timeTaken}
-      </div>
-    );
+    return <DisplayAttempt displayedAttempt={latestAttempt} />;
   } else if (selectedAttempt) {
-    return (
-      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
-        Time Taken: {selectedAttempt.timeTaken}
-      </div>
-    );
+    return <DisplayAttempt displayedAttempt={selectedAttempt} />;
   }
   return (
     <div className="h-96 w-80 rounded-xl border-2 p-4 text-left font-bold">
       There are no attempts
+    </div>
+  );
+}
+
+function DisplayAttempt({ displayedAttempt }: { displayedAttempt: Attempt }) {
+  const timeTakenFormatted =
+    Math.round((displayedAttempt.timeTaken / 60) * 100) / 100;
+
+  const speechArray = displayedAttempt.speech.split(" ");
+  const wordsPerMinute = Math.round(speechArray.length / timeTakenFormatted);
+
+  const fillerWords = fillerWordCount(speechArray, ["like", "and"]);
+  const timeDiff = displayedAttempt.timeTaken - presentation.idealTime;
+
+  const timeDiffFormatted = Math.round((Math.abs(timeDiff) / 60) * 100) / 100;
+
+  return (
+    <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
+      <div className="py-10">
+        <div>
+          <h1> Time taken: {timeTakenFormatted} minutes</h1>
+        </div>
+        <div>
+          <h1> Words per minute: {wordsPerMinute} WPM</h1>
+        </div>
+        <div>
+          <h1> Potential filler words said: {fillerWords}</h1>
+        </div>
+        <div>
+          <h1>
+            You went {timeDiff > 0 ? "over" : "under"} time by:{" "}
+            {timeDiffFormatted} minutes
+          </h1>
+        </div>
+      </div>
     </div>
   );
 }
