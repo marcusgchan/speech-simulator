@@ -98,15 +98,23 @@ export default function Index() {
 
   return (
     <div>
-      <h1 className="p-10 text-3xl font-extrabold">Previous Presentations</h1>
-      <section className={`grid ${isMobile ? "grid-cols-1 " : "grid-cols-4"}`}>
-        {data.map((presentation, i) => (
-          <PresentationCard
-            presentation={presentation}
-            key={i}
-          ></PresentationCard>
-        ))}
-      </section>
+      <div className="p-4">
+        <h1 className="py-10 px-4 text-3xl font-extrabold">
+          Previous Presentations
+        </h1>
+        <section
+          className={`grid auto-rows-fr ${
+            isMobile ? "grid-cols-1 " : "grid-cols-4"
+          }`}
+        >
+          {data.map((presentation, i) => (
+            <PresentationCard
+              presentation={presentation}
+              key={i}
+            ></PresentationCard>
+          ))}
+        </section>
+      </div>
     </div>
   );
 }
