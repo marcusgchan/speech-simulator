@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { useState } from 'react';
+import { number, string } from 'zod';
 
 export default function Create() {
-  const [cards, setCards] = useState<string[]>([{id: uuidv4(), text: "card"}])
+  const [speech, addSpeech] = useState("");
+  const cards: {id: number, text: string}[] = [];
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div>
@@ -11,23 +12,11 @@ export default function Create() {
           <input type="text" id="name" name="user_name" />
         </div>
         <div className="pb-2">
-          <label className="pr-4">Time:</label>
+          <label className="pr-4">Expected time:</label>
           <input type="number" name="time" />
         </div>
-        <div className="pb-20">
+        <div className="pb-2">
           <label className="pr-2">Speech:</label>
-          <select>
-            {cards.map((card, i) => (
-              <option>{card}</option>
-            ))}
-          </select>
-          <button
-            type="button"
-            className="rounded-full bg-blue-500 py-1 px-3 font-bold text-white hover:bg-blue-700"
-            onClick={() => setCards([...cards, `Card ${cards.length + 1}`])}
-          >
-            Add another card
-          </button>
           <textarea
             className="
         form-control
@@ -48,12 +37,21 @@ export default function Create() {
       "
             placeholder="Your speech"
             rows={5}
+            onChange={e => addSpeech(e.target.value)}
           ></textarea>
         </div>
       </div>
+      <p className="font-bold pb-20 text-xs">Use | to separate into different cards</p>
       <button
         type="button"
         className="rounded-full bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+        onClick={() => {
+          var card = speech.split('|');
+          for (let i = 0; i < card.length; i++) {
+            cards[i] = {id: i, text: card[i] as string}
+          }
+          console.log(cards);
+        }}
       >
         Create speech
       </button>
