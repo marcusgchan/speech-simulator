@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
 
@@ -34,38 +34,37 @@ export default function Attempt() {
           setSelectAttemptId(attempt.id);
         }}
       >
-        {index} - Date Taken: {attempt.createdAt.toDateString()}
+        {attemptsList.length - index} - Date Taken:{" "}
+        {attempt.createdAt.toDateString()}
       </div>
     );
   });
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center gap-12">
-        <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
-        <div className="outer-container flex flex-row gap-12">
-          <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4">
-            {attemptsDivs}
-          </div>
-          <HandleAttemptToDisplay
-            latestAttempt={latestAttempt}
-            selectedAttempt={selectedAttempt}
-          />
+    <div className="flex flex-col items-center justify-center gap-12">
+      <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
+      <div className="outer-container flex flex-row gap-12">
+        <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4">
+          {attemptsDivs}
         </div>
-        <button
-          className="mx-2 rounded-xl bg-accent p-4 text-white"
-          // onClick={() => ()}
-        >
-          Start New Attempt
-        </button>
-        <button
-          className="mx-2 rounded-xl bg-accent p-4 text-white"
-          onClick={() => navigate("../")}
-        >
-          Previous presentations
-        </button>
+        <HandleAttemptToDisplay
+          latestAttempt={latestAttempt}
+          selectedAttempt={selectedAttempt}
+        />
       </div>
-    </>
+      <button
+        className="mx-2 rounded-xl bg-accent p-4 text-white"
+        // onClick={() => ()}
+      >
+        Start New Attempt
+      </button>
+      <button
+        className="mx-2 rounded-xl bg-accent p-4 text-white"
+        onClick={() => navigate("../")}
+      >
+        Previous presentations
+      </button>
+    </div>
   );
 }
 
