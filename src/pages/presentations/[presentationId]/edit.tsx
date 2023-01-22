@@ -60,7 +60,7 @@ function Inner({
     <div className="flex min-h-screen flex-col items-center justify-center">
       <div>
         <div className="pb-5">
-          <label className="pr-4"> New title: </label>
+          <label className="pr-4">Title: </label>
           <input
             className="
       form-control
@@ -89,7 +89,7 @@ function Inner({
           />
         </div>
         <div className="pb-5">
-          <label className="pr-4">New expected time:</label>
+          <label className="pr-4">Expected time:</label>
           <input
             type="number"
             name="time"
@@ -109,7 +109,7 @@ function Inner({
           />
         </div>
         <div className="pb-5">
-          <label className="pr-2">New speech:</label>
+          <label className="pr-2">Speech:</label>
           <textarea
             className="
       form-control
@@ -137,48 +137,56 @@ function Inner({
       <p className="pb-16 text-xs font-bold">
         Use | to separate into different cards
       </p>
-      <button
-        type="button"
-        className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
-        onClick={async () => {
-          const card = speech.split("|");
-          for (let i = 0; i < card.length; i++) {
-            const flashcardToUpdate = data.flashcards[i];
-            if (flashcardToUpdate) {
-              newCards[i] = {
-                rank: i + 1,
-                text: card[i] as string,
-                id: flashcardToUpdate.id,
-              };
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          onClick={() => router.push("/presentations")}
+          className="hover:bg-emeral-700 w-30 rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
+        >
+          Presentations
+        </button>
+        <button
+          type="button"
+          className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
+          onClick={async () => {
+            const card = speech.split("|");
+            for (let i = 0; i < card.length; i++) {
+              const flashcardToUpdate = data.flashcards[i];
+              if (flashcardToUpdate) {
+                newCards[i] = {
+                  rank: i + 1,
+                  text: card[i] as string,
+                  id: flashcardToUpdate.id,
+                };
+              }
             }
-          }
-          if (card.length > data.flashcards.length) {
-            for (let i = 0; i < card.length - data.flashcards.length; i++) {
-              moreCards[i] = {
-                rank: i + data.flashcards.length + 1,
-                text: card[i + data.flashcards.length] as string,
-              };
+            if (card.length > data.flashcards.length) {
+              for (let i = 0; i < card.length - data.flashcards.length; i++) {
+                moreCards[i] = {
+                  rank: i + data.flashcards.length + 1,
+                  text: card[i + data.flashcards.length] as string,
+                };
+              }
             }
-          }
-          const result = updatePresentationSchema.safeParse({
-            ...presentation,
-            id: data?.id as string,
-            flashcards: newCards,
-            moreFlashcards: moreCards,
-            dateCreated: new Date(),
-          });
-          if (result.success) {
-            mutation.mutate(result.data);
-          } else {
-            snackDispatch({
-              type: "ERROR",
-              message: "Name and Expected fields are required",
+            const result = updatePresentationSchema.safeParse({
+              ...presentation,
+              id: data?.id as string,
+              flashcards: newCards,
+              moreFlashcards: moreCards,
+              dateCreated: new Date(),
             });
-          }
-        }}
-      >
-        Edit speech
-      </button>
+            if (result.success) {
+              mutation.mutate(result.data);
+            } else {
+              snackDispatch({
+                type: "ERROR",
+                message: "Name and Expected fields are required",
+              });
+            }
+          }}
+        >
+          Edit speech
+        </button>
+      </div>
     </div>
   );
 }

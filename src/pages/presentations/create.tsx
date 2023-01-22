@@ -109,16 +109,16 @@ export default function Create() {
       <p className="pb-16 text-xs font-bold">
         Use | to separate into different cards
       </p>
-      <div>
+      <div className="grid grid-cols-2 gap-2">
         <button
           onClick={() => router.push("/")}
-          className="hover:bg-emeral-700 rounded-xl bg-accent py-2 px-4 hover:bg-emerald-700"
+          className="hover:bg-emeral-700 w-30 rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
         >
           Home Page
         </button>
         <button
           type="button"
-          className="rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
+          className="w-30 rounded-full bg-accent py-2 px-4 font-bold text-white hover:bg-emerald-700"
           onClick={() => {
             const card = speech.split("|");
             for (let i = 0; i < card.length; i++) {
