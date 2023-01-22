@@ -61,7 +61,7 @@ const VRClient = () => {
     return <span> Please allow access to microphone.</span>;
   }
 
-  const { data, isLoading } = api.queue.getQueueAndPresentation.useQuery("", {
+  const { data } = api.queue.getQueueAndPresentation.useQuery("", {
     refetchInterval: 5 * 1000,
   });
 
@@ -259,7 +259,7 @@ function LightBulb(props: MeshProps) {
 }
 
 function Model() {
-  const model = useGLTF("http://localhost:3000/classroom.glb");
+  const model = useGLTF(`${clientEnv.NEXT_PUBLIC_BASE_URL}/classroom.glb`);
   return (
     <primitive
       object={model.scene}
