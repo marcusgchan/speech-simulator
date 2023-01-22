@@ -56,6 +56,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   presentation  Presentation[]
+  attemptsToPush AttemptsToPush[]
 }
 
 model VerificationToken {
@@ -99,6 +100,7 @@ model Attempt {
 
   presentationId String
   presentation   Presentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+  attemptsToPush AttemptsToPush[]
 }
 
 model Queue {
@@ -106,4 +108,13 @@ model Queue {
   presentationId String
   presentation   Presentation @relation(fields: [presentationId], references: [id])
   createdAt      DateTime     @default(now())
+}
+
+model AttemptsToPush {
+  userId String
+  User User @relation(fields: [userId], references: [id])
+  attemptId String
+  attempt Attempt @relation(fields: [attemptId], references: [id])
+
+  @@id([userId, attemptId])
 }
