@@ -119,14 +119,14 @@ const VRClient = () => {
                   color={"black"}
                   anchorX="left"
                   anchorY="top"
-                  maxWidth={10}
+                  maxWidth={9}
                   whiteSpace="normal"
                 >
                   {cards[cardIndex]?.text}
                 </Text>
               </mesh>
               <boxGeometry />
-              <meshBasicMaterial color="blue" />
+              <meshBasicMaterial color="white" />
             </mesh>
           </Interactive>
           <LightBulb />
