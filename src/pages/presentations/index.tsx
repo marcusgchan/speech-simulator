@@ -84,13 +84,14 @@ export default function Index() {
     return (
       <button
         className="m-4 flex flex-col rounded-xl border-2 p-4 text-left"
-        onClick={() => navigate(`/presentations/${presentation.id}/edit`)}
+        onClick={() => navigate(`/presentations/${presentation.id}/`)}
       >
         <div className="h-4 w-full"></div>
         <i>{presentation.createdAt.toDateString()}</i>
         <h1 className="text-2xl font-extrabold">{presentation.title}</h1>
         <div className="text-accent">
-          Goal time: {presentation.idealTime} minutes
+          Goal time: {Math.round((presentation.idealTime / 60) * 100) / 100}{" "}
+          minutes
         </div>
       </button>
     );
