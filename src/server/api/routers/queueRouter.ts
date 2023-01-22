@@ -4,7 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 export const queueRouter = createTRPCRouter({
   getQueueAndPresentation: protectedProcedure
     .input(z.string())
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx }) => {
       const query = await ctx.prisma.queue.findFirst({
         where: {
           presentation: {

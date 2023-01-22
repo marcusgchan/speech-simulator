@@ -1,4 +1,3 @@
-import { time } from "console";
 import { fillerWordCount } from "../../fillerWords";
 import router from "next/router";
 

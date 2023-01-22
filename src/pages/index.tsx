@@ -3,7 +3,6 @@ import Head from "next/head";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { api } from "../utils/api";
 
 const Home: NextPage = () => {
   return (

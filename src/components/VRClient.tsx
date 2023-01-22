@@ -110,7 +110,6 @@ const VRClient = () => {
         >
           <Controllers />
           <PlayerController
-            cardIndex={cardIndex}
             increment={increment}
             decrement={decrement}
             isLeftPressed={isLeftPressed}
@@ -150,7 +149,6 @@ const VRClient = () => {
 function PlayerController({
   translationSpeed = 2,
   rotationSpeed = 2,
-  cardIndex,
   increment,
   decrement,
   isLeftPressed: isLeftPressed,
@@ -158,27 +156,16 @@ function PlayerController({
 }: {
   translationSpeed?: number;
   rotationSpeed?: number;
-  cardIndex: number;
   isLeftPressed: React.MutableRefObject<boolean>;
   isRightPressed: React.MutableRefObject<boolean>;
   increment: () => void;
   decrement: () => void;
 }): null {
   const {
-    // An array of connected `XRController`
-    controllers,
-    // Whether the XR device is presenting in an XR session
-    isPresenting,
-    // Whether hand tracking inputs are active
-    isHandTracking,
     // A THREE.Group representing the XR viewer or player
     player,
     // The active `XRSession`
     session,
-    // `XRSession` foveation. This can be configured as `foveation` on <XR>. Default is `0`
-    foveation,
-    // `XRSession` reference-space type. This can be configured as `referenceSpace` on <XR>. Default is `local-floor`
-    referenceSpace,
   } = useXR();
 
   const leftController = useController("left");
@@ -189,7 +176,7 @@ function PlayerController({
   const yBasisVector = new THREE.Vector3(0, 1, 0);
   const zeroVector = new THREE.Vector3(0, 0, 0);
 
-  useFrame(({ gl, scene, camera, controls, viewport, internal }, delta) => {
+  useFrame(({ scene, camera }, delta) => {
     if (!session) return null;
 
     // In the future make player body turn when the camera reaches a certain threshold
