@@ -4,6 +4,21 @@ import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
 
 export default function Attempt() {
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 800;
+
   const router = useRouter();
   const presentationId = router.query.presentationId as string;
   const { data: attemptsList, isLoading } =
@@ -43,8 +58,12 @@ export default function Attempt() {
   return (
     <div className="flex flex-col items-center justify-center gap-12">
       <h1 className="p-10 text-3xl font-extrabold">Attempts</h1>
-      <div className="outer-container flex flex-row gap-12">
-        <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4">
+      <div
+        className={`outer-container flex gap-8 ${
+          isMobile ? "flex-col" : "flex-row"
+        }`}
+      >
+        <div className="attempts-list flex h-96 w-96 flex-col items-center gap-2 overflow-y-auto p-4 ">
           {attemptsDivs}
         </div>
         <HandleAttemptToDisplay
@@ -77,19 +96,19 @@ function HandleAttemptToDisplay({
 }) {
   if (!selectedAttempt && latestAttempt) {
     return (
-      <div className="h-96 w-96 rounded-xl border-2 p-4 text-left">
+      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
         Time Taken: {latestAttempt.timeTaken}
       </div>
     );
   } else if (selectedAttempt) {
     return (
-      <div className="h-96 w-96 rounded-xl border-2 p-4 text-left">
+      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
         Time Taken: {selectedAttempt.timeTaken}
       </div>
     );
   }
   return (
-    <div className="h-96 w-96 rounded-xl border-2 p-4 text-left font-bold">
+    <div className="h-96 w-80 rounded-xl border-2 p-4 text-left font-bold">
       There are no attempts
     </div>
   );
