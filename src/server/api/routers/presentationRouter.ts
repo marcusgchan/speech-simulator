@@ -28,7 +28,7 @@ export const presentationRouter = createTRPCRouter({
           },
         },
       });
-      if (queue) {
+      if (!queue) {
         await ctx.prisma.$transaction(async () => {
           const presentation = await ctx.prisma.presentation.create({
             data: {
