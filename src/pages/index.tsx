@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 import { api } from "../utils/api";
 
@@ -40,25 +41,53 @@ const AuthShowcase: React.FC = () => {
   };
 
   // {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+  const [width, setWidth] = useState<number>(window.innerWidth);
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 800;
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="p-16 text-5xl font-extrabold">Speech Simulator</h1>
-      <div className="flex justify-around text-3xl">
+      <h1
+        className={`pt-8 text-center font-bold ${
+          isMobile ? "text-2xl" : "text-3xl"
+        }`}
+      >
+        Speech Simulator
+      </h1>
+      <h1
+        className={`pt-4 pb-16 text-center font-extrabold ${
+          isMobile ? "text-5xl" : "text-7xl"
+        }`}
+      >
+        Practice and Perfect.
+      </h1>
+      <div
+        className={`flex justify-around text-2xl ${
+          isMobile ? "flex-col" : "flex-row"
+        }`}
+      >
         <button
-          className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
+          className="m-2 w-80 rounded-xl bg-accent p-2 text-white hover:bg-emerald-700"
           onClick={() => navigate("/presentations/create")}
         >
           Create Presentation
         </button>
         <button
-          className="mx-2 w-80 rounded-xl bg-accent p-2 text-white"
+          className="m-2 w-80 rounded-xl bg-accent p-2 text-white hover:bg-emerald-700"
           onClick={() => navigate("/presentations")}
         >
           Previous Presentations
-        </button>
-        <button className="mx-2 w-80 rounded-xl bg-accent p-2 text-white">
-          Logout
         </button>
       </div>
       <i className="p-4">
