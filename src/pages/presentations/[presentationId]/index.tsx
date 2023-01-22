@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { api } from "../../../utils/api";
 import { type Attempt } from "@prisma/client";
+import { fillerWordCount } from "../../../fillerWords";
 import { useSnackbarDispatch } from "../../../components/Snackbar";
 
 export default function Attempt() {
@@ -37,8 +38,7 @@ export default function Attempt() {
 
   const router = useRouter();
   const presentationId = router.query.presentationId as string;
-  const { data: attemptsList, isLoading } =
-    api.attempt.getAll.useQuery(presentationId);
+  const { data, isLoading } = api.attempt.getAll.useQuery(presentationId);
   const navigate = (path: string) => {
     if (router.pathname !== path) {
       router.push(path);
@@ -47,9 +47,11 @@ export default function Attempt() {
 
   const [selectAttemptId, setSelectAttemptId] = useState<string>();
 
-  if (isLoading || !attemptsList) {
+  if (isLoading || !data?.attemptsList || !data?.idealTime) {
     return <div>Loading...</div>;
   }
+  const attemptsList = data.attemptsList;
+  const idealTime = data.idealTime;
 
   const latestAttempt = attemptsList[0];
   const selectedAttempt = attemptsList.find(
@@ -86,6 +88,7 @@ export default function Attempt() {
         <HandleAttemptToDisplay
           latestAttempt={latestAttempt}
           selectedAttempt={selectedAttempt}
+          idealTime={idealTime}
         />
       </div>
       <div
@@ -129,26 +132,71 @@ export default function Attempt() {
 function HandleAttemptToDisplay({
   latestAttempt,
   selectedAttempt,
+  idealTime,
 }: {
   latestAttempt: Attempt | undefined;
   selectedAttempt: Attempt | undefined;
+  idealTime: number;
 }) {
   if (!selectedAttempt && latestAttempt) {
     return (
-      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
-        Time Taken: {latestAttempt.timeTaken}
-      </div>
+      <DisplayAttempt
+        displayedAttempt={latestAttempt}
+        presentationIdealTime={idealTime}
+      />
     );
   } else if (selectedAttempt) {
     return (
-      <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
-        Time Taken: {selectedAttempt.timeTaken}
-      </div>
+      <DisplayAttempt
+        displayedAttempt={selectedAttempt}
+        presentationIdealTime={idealTime}
+      />
     );
   }
   return (
     <div className="h-96 w-80 rounded-xl border-2 p-4 text-left font-bold">
       There are no attempts
+    </div>
+  );
+}
+
+function DisplayAttempt({
+  displayedAttempt,
+  presentationIdealTime,
+}: {
+  displayedAttempt: Attempt;
+  presentationIdealTime: number;
+}) {
+  const timeTakenFormatted =
+    Math.round((displayedAttempt.timeTaken / 60) * 100) / 100;
+
+  const speechArray = displayedAttempt.speech.split(" ");
+  const wordsPerMinute = Math.round(speechArray.length / timeTakenFormatted);
+
+  const fillerWords = fillerWordCount(speechArray, ["like", "and"]);
+  const timeDiff = displayedAttempt.timeTaken - presentationIdealTime;
+
+  const timeDiffFormatted = Math.round((Math.abs(timeDiff) / 60) * 100) / 100;
+
+  return (
+    <div className="h-96 w-80 rounded-xl border-2 p-4 text-left">
+      <div className="py-10">
+        <div>
+          <h1> Time taken: {timeTakenFormatted} minutes</h1>
+        </div>
+        <div>
+          <h1> Words per minute: {wordsPerMinute} WPM</h1>
+        </div>
+        <div>
+          <h1> Potential filler words said: {fillerWords}</h1>
+        </div>
+        <div>
+          <h1>
+            You went {timeDiff > 0 ? "over" : "under"} time by:{" "}
+            {timeDiffFormatted} minutes
+          </h1>
+        </div>
+      </div>
     </div>
   );
 }
