@@ -22,7 +22,6 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - clone the repo
 - npm install
 - follow the instructions in the example env file
-- npx generate
 - npm run dev
 
 ##
