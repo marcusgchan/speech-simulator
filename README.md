@@ -25,6 +25,7 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - npm install
 - follow the instructions in the example env file
 - npm run dev
+- npx prisma db push
 
 ##
 
