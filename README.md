@@ -16,6 +16,8 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io/)
 - [React](https://reactjs.org/)
+- [React Three Fiber](https://github.com/pmndrs/react-three-fiber)
+- [React Three XR](https://github.com/pmndrs/react-xr)
 
 ## Getting Started
 
