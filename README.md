@@ -27,11 +27,7 @@ Import a script to create a Presentation. And put on a headset to get started. E
 - npm run dev
 - npx prisma db push
 
-##
-
 ## Gallery
-
-##
 
 ![](website_images/img.png)
 
